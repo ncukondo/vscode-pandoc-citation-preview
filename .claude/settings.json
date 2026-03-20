@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Read(/home/ncukondo/src/github.com/ncukondo/vscode-pandoc-citation-preview--worktrees/**)"
+      "Read(/**)",
+      "Edit(/.claude/worktrees/**)",
+      "Write(/.claude/worktrees/**)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)"
     ]
   }
 }
