@@ -133,4 +133,32 @@ describe("renderBibliography", () => {
       expect(result).toContain("Smith");
     });
   });
+
+  describe("Step 5: HTML output structure", () => {
+    it("wraps output in a container div with appropriate class", () => {
+      const result = renderBibliography({
+        bibliographyData: threeEntries(),
+        citedIds: ["smith2020"],
+        nocite: [],
+        cslStyle: null,
+      });
+      expect(result).toContain('<div class="csl-bib-body');
+      expect(result).toContain("csl-entry");
+    });
+
+    it("entries are ordered according to CSL style rules", () => {
+      // APA orders alphabetically by author family name
+      const result = renderBibliography({
+        bibliographyData: threeEntries(),
+        citedIds: ["smith2020", "doe2019", "adams2021"],
+        nocite: [],
+        cslStyle: null,
+      });
+      const adamsPos = result.indexOf("Adams");
+      const doePos = result.indexOf("Doe");
+      const smithPos = result.indexOf("Smith");
+      expect(adamsPos).toBeLessThan(doePos);
+      expect(doePos).toBeLessThan(smithPos);
+    });
+  });
 });
