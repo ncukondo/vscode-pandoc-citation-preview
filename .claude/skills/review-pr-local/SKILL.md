@@ -90,6 +90,27 @@ gh pr comment $ARGUMENTS --body "..."
 LGTM / NEEDS_CHANGES
 ```
 
+### 6. Output Structured Marker (MANDATORY)
+
+**レビュー結果の最後に、必ず以下の形式のマーカーを出力すること。**
+これは hook による機械的検証に使用される。省略不可。
+
+```
+<!-- REVIEW_RESULT:{"verdict":"LGTM","findings_count":0} -->
+```
+
+または:
+
+```
+<!-- REVIEW_RESULT:{"verdict":"NEEDS_CHANGES","findings_count":3} -->
+```
+
+ルール:
+- `findings_count`: Critical + Improvement + Minor の合計数
+- `findings_count > 0` なら `verdict` は必ず `NEEDS_CHANGES`
+- `findings_count == 0` の場合のみ `verdict` は `LGTM`
+- このマーカーはレビュー出力の **最終行** に置くこと
+
 **重要**:
 - Minor な品質向上の指摘も含めて **全て** 報告・投稿する
 - 指摘が1つでもあれば verdict は `NEEDS_CHANGES`
