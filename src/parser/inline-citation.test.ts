@@ -39,4 +39,41 @@ describe("parseInlineCitation", () => {
       expect(parseInlineCitation("smith2020", 0)).toBeNull();
     });
   });
+
+  // Step 2: Word boundary check
+  describe("word boundary check", () => {
+    it("rejects @ preceded by word character (email)", () => {
+      expect(parseInlineCitation("email@example", 5)).toBeNull();
+    });
+
+    it("accepts @ preceded by space", () => {
+      expect(parseInlineCitation("a @smith", 2)).toEqual({
+        type: "inline",
+        id: "smith",
+        locator: null,
+        startPos: 2,
+        endPos: 8,
+      });
+    });
+
+    it("accepts @ at start of string", () => {
+      expect(parseInlineCitation("@smith", 0)).toEqual({
+        type: "inline",
+        id: "smith",
+        locator: null,
+        startPos: 0,
+        endPos: 6,
+      });
+    });
+
+    it("accepts @ preceded by non-word char", () => {
+      expect(parseInlineCitation("(@smith)", 1)).toEqual({
+        type: "inline",
+        id: "smith",
+        locator: null,
+        startPos: 1,
+        endPos: 7,
+      });
+    });
+  });
 });

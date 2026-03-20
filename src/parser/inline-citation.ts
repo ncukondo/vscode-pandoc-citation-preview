@@ -19,6 +19,9 @@ export function parseInlineCitation(
 ): InlineCitation | null {
   if (pos >= src.length || src[pos] !== "@") return null;
 
+  // @ must not be preceded by a word character (avoids matching emails etc.)
+  if (pos > 0 && /\w/.test(src[pos - 1])) return null;
+
   const keyResult = parseCitationKey(src, pos + 1);
   if (!keyResult) return null;
 
