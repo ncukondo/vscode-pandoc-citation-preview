@@ -69,4 +69,42 @@ describe("renderCitation", () => {
       expect(result).toBe("(Smith, 2020, p. 10)");
     });
   });
+
+  describe("Step 3: Suppress author", () => {
+    it("renders citation without author when suppressAuthor is true", () => {
+      const result = renderCitation(
+        [{ id: "smith2020", suppressAuthor: true }],
+        defaultOptions(),
+      );
+      expect(result).toBe("(2020)");
+    });
+  });
+
+  describe("Step 4: Prefix and suffix", () => {
+    it("renders citation with prefix", () => {
+      const result = renderCitation(
+        [{ id: "smith2020", prefix: "see " }],
+        defaultOptions(),
+      );
+      expect(result).toBe("(see Smith, 2020)");
+    });
+
+    it("renders citation with suffix", () => {
+      const result = renderCitation(
+        [{ id: "smith2020", suffix: ", emphasis added" }],
+        defaultOptions(),
+      );
+      expect(result).toBe("(Smith, 2020, emphasis added)");
+    });
+  });
+
+  describe("Step 5: Multiple citations in one group", () => {
+    it("renders multiple citations sorted by style", () => {
+      const result = renderCitation(
+        [{ id: "smith2020" }, { id: "doe2019" }],
+        defaultOptions(),
+      );
+      expect(result).toBe("(Doe, 2019; Smith, 2020)");
+    });
+  });
 });
