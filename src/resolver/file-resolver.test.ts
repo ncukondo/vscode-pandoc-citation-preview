@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resolvePath } from "./file-resolver";
+import { resolvePath, resolveDefaultBibliography } from "./file-resolver";
 import type { ResolveContext } from "./file-resolver";
 
 // Helper to create a context with a set of existing files
@@ -102,5 +102,32 @@ describe("resolvePath", () => {
       });
       expect(resolvePath("refs.bib", ctx)).toBeNull();
     });
+  });
+});
+
+// ─── Step 5: Default bibliography ────────────────────────────────────────
+
+describe("resolveDefaultBibliography", () => {
+  it("resolves each default bibliography path using the priority chain", () => {
+    const ctx = makeContext(["/project/docs/a.bib", "/workspace/b.bib"], {
+      mdFileDir: "/project/docs",
+      workspaceRoot: "/workspace",
+    });
+    const result = resolveDefaultBibliography(["a.bib", "b.bib"], ctx);
+    expect(result).toEqual(["/project/docs/a.bib", "/workspace/b.bib"]);
+  });
+
+  it("skips default bibliography paths that cannot be resolved", () => {
+    const ctx = makeContext(["/project/docs/a.bib"], {
+      mdFileDir: "/project/docs",
+    });
+    const result = resolveDefaultBibliography(["a.bib", "missing.bib"], ctx);
+    expect(result).toEqual(["/project/docs/a.bib"]);
+  });
+
+  it("returns empty array when no defaults are provided", () => {
+    const ctx = makeContext([]);
+    const result = resolveDefaultBibliography([], ctx);
+    expect(result).toEqual([]);
   });
 });

@@ -52,3 +52,17 @@ export function resolvePath(
 
   return null;
 }
+
+export function resolveDefaultBibliography(
+  defaultPaths: string[],
+  context: ResolveContext,
+): string[] {
+  const resolved: string[] = [];
+  for (const p of defaultPaths) {
+    const result = resolvePath(p, context);
+    if (result !== null) {
+      resolved.push(result);
+    }
+  }
+  return resolved;
+}
