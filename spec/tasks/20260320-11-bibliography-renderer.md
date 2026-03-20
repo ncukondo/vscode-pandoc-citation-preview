@@ -55,7 +55,7 @@ function renderBibliography(options: BibliographyRenderOptions): string;  // HTM
 ### Step 4: Custom CSL style
 
 - [x] Write test: different CSL style → output format changes
-- [x] Write test: null CSL → Chicago author-date default
+- [x] Write test: null CSL → APA default
 - [x] Create stub (verify Red)
 - [x] Implement (verify Green)
 - [x] Lint & type check

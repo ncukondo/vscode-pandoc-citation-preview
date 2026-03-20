@@ -69,6 +69,7 @@ describe("renderBibliography", () => {
       });
       expect(result).toContain("Smith");
       expect(result).toContain("Adams");
+      expect(result).not.toContain("Doe");
     });
 
     it("ignores nocite id that does not exist in bibliography", () => {
