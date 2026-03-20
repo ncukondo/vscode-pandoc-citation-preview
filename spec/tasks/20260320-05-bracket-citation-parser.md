@@ -43,35 +43,35 @@ function parseBracketCitation(src: string, pos: number): BracketCitation | null;
 
 ### Step 2: Multiple semicolon-separated citations
 
-- [ ] Write test: `"[@k1; @k2]"` → 2 citations
-- [ ] Write test: `"[@k1; @k2; @k3]"` → 3 citations
-- [ ] Write test: `"[see @k1, p. 10; also -@k2, chap. 3]"` → 2 citations with full structure
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `"[@k1; @k2]"` → 2 citations
+- [x] Write test: `"[@k1; @k2; @k3]"` → 3 citations
+- [x] Write test: `"[see @k1, p. 10; also -@k2, chap. 3]"` → 2 citations with full structure
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 3: Unmatched brackets
 
-- [ ] Write test: `"[@smith2020"` (no closing `]`) → `null`
-- [ ] Write test: `"[@smith[nested]2020]"` → handles nested brackets correctly
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `"[@smith2020"` (no closing `]`) → `null`
+- [x] Write test: `"[@smith[nested]2020]"` → handles nested brackets correctly
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 4: Edge cases
 
-- [ ] Write test: `"[@smith2020, p. 10]"` → locator parsed correctly
-- [ ] Write test: `"[-@smith2020]"` → suppressAuthor
-- [ ] Write test: `"[]"` → `null` (empty brackets)
-- [ ] Write test: `"[@]"` → `null` (no valid key after @)
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `"[@smith2020, p. 10]"` → locator parsed correctly
+- [x] Write test: `"[-@smith2020]"` → suppressAuthor
+- [x] Write test: `"[]"` → `null` (empty brackets)
+- [x] Write test: `"[@]"` → `null` (no valid key after @)
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ## Completion Checklist
 
-- [ ] All tests pass
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] Lint passes
+- [x] Type check passes
+- [x] Build succeeds
 - [ ] Move file to `spec/tasks/completed/`

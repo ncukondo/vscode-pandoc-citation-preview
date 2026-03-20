@@ -92,4 +92,33 @@ describe("parseBracketCitation", () => {
       expect(result!.raw).toBe("[@smith[nested]2020]");
     });
   });
+
+  // Step 4: Edge cases
+  describe("edge cases", () => {
+    it('parses "[@smith2020, p. 10]" → locator parsed correctly', () => {
+      const result = parseBracketCitation("[@smith2020, p. 10]", 0);
+      expect(result).not.toBeNull();
+      expect(result!.citations).toHaveLength(1);
+      expect(result!.citations[0].locator).toEqual({
+        label: "page",
+        value: "10",
+      });
+    });
+
+    it('parses "[-@smith2020]" → suppressAuthor', () => {
+      const result = parseBracketCitation("[-@smith2020]", 0);
+      expect(result).not.toBeNull();
+      expect(result!.citations).toHaveLength(1);
+      expect(result!.citations[0].suppressAuthor).toBe(true);
+      expect(result!.citations[0].id).toBe("smith2020");
+    });
+
+    it('returns null for "[]" (empty brackets)', () => {
+      expect(parseBracketCitation("[]", 0)).toBeNull();
+    });
+
+    it('returns null for "[@]" (no valid key after @)', () => {
+      expect(parseBracketCitation("[@]", 0)).toBeNull();
+    });
+  });
 });
