@@ -14,8 +14,8 @@
 | 7 | [File path resolver](completed/20260320-08-file-path-resolver.md) | Done | [ADR-003](../decisions/ADR-003-file-path-resolution.md) |
 | 8 | [Bibliography loader](completed/20260320-09-bibliography-loader.md) | Done | [ADR-001](../decisions/ADR-001-citation-js-for-rendering.md) |
 | 9 | [Citation renderer](completed/20260320-10-citation-renderer.md) | Done | [ADR-001](../decisions/ADR-001-citation-js-for-rendering.md) |
-| 10 | [Bibliography renderer](20260320-11-bibliography-renderer.md) | Todo | [ADR-001](../decisions/ADR-001-citation-js-for-rendering.md) |
-| 11 | [markdown-it plugin integration](20260320-12-markdownit-plugin.md) | Todo | — |
+| 10 | [Bibliography renderer](completed/20260320-11-bibliography-renderer.md) | Done | [ADR-001](../decisions/ADR-001-citation-js-for-rendering.md) |
+| 11 | [markdown-it plugin integration](completed/20260320-12-markdownit-plugin.md) | Done | — |
 
 ## Dependency Graph
 
