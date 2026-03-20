@@ -118,4 +118,54 @@ describe("loadBibliography", () => {
       expect(result.ids).toHaveLength(1);
     });
   });
+
+  describe("Step 4: Merge inline references", () => {
+    it("inline references added to cite instance with ids available", async () => {
+      const result = await loadBibliography({
+        bibliographyPaths: [],
+        inlineReferences: [
+          {
+            id: "inline2020",
+            type: "article-journal",
+            title: "Inline Article",
+            author: [{ family: "Inline", given: "A" }],
+          },
+        ],
+        readFile: async () => "",
+      });
+
+      expect(result.ids).toContain("inline2020");
+      expect(result.ids).toHaveLength(1);
+    });
+
+    it("inline reference with same id as .bib entry overrides it", async () => {
+      const bibContent = `@article{smith2020,
+  author = {Smith, John},
+  title = {Original Title},
+  journal = {J},
+  year = {2020}
+}`;
+      const result = await loadBibliography({
+        bibliographyPaths: ["/path/to/refs.bib"],
+        inlineReferences: [
+          {
+            id: "smith2020",
+            type: "article-journal",
+            title: "Overridden Title",
+            author: [{ family: "Smith", given: "John" }],
+          },
+        ],
+        readFile: async () => bibContent,
+      });
+
+      expect(result.ids).toContain("smith2020");
+      // Should only have one entry, not duplicated
+      expect(result.ids).toHaveLength(1);
+      // The inline version should win
+      const entry = result.cite.data.find(
+        (d: { id: string }) => d.id === "smith2020",
+      );
+      expect(entry?.title).toBe("Overridden Title");
+    });
+  });
 });

@@ -33,5 +33,12 @@ export async function loadBibliography(
     }
   }
 
+  // Merge inline references, overriding any existing entries with the same id
+  if (options.inlineReferences.length > 0) {
+    const inlineIds = new Set(options.inlineReferences.map((r) => r.id));
+    cite.data = cite.data.filter((entry) => !inlineIds.has(entry.id));
+    cite.add(options.inlineReferences);
+  }
+
   return { cite, ids: cite.getIds() };
 }
