@@ -107,4 +107,28 @@ describe("renderCitation", () => {
       expect(result).toBe("(Doe, 2019; Smith, 2020)");
     });
   });
+
+  describe("Step 6: Custom CSL style", () => {
+    it("renders with custom CSL XML (vancouver/numeric)", () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { plugins } = require("@citation-js/core");
+      const vancouverXml: string = plugins.config.get("@csl").templates.get("vancouver");
+
+      const result = renderCitation(
+        [{ id: "smith2020" }],
+        { bibliographyData: defaultBib(), cslStyle: vancouverXml },
+      );
+      // Vancouver uses numeric format: (1)
+      expect(result).toBe("(1)");
+    });
+
+    it("uses default APA style when cslStyle is null", () => {
+      const result = renderCitation(
+        [{ id: "smith2020" }],
+        { bibliographyData: defaultBib(), cslStyle: null },
+      );
+      // APA author-date format
+      expect(result).toBe("(Smith, 2020)");
+    });
+  });
 });

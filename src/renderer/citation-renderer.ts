@@ -1,6 +1,17 @@
 import "@citation-js/plugin-csl";
 import type { BibliographyData } from "../resolver/bibliography";
 
+const DEFAULT_TEMPLATE = "apa";
+const CUSTOM_TEMPLATE_KEY = "__pandoc-citation-preview-custom__";
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { plugins } = require("@citation-js/core") as {
+  plugins: {
+    config: { get(name: string): { templates: { add(name: string, xml: string): void } } };
+  };
+};
+const cslConfig = plugins.config.get("@csl");
+
 export interface CitationRenderOptions {
   bibliographyData: BibliographyData;
   cslStyle: string | null;
@@ -50,10 +61,16 @@ export function renderCitation(
   const validItems = items.filter((item) => knownIds.has(item.id));
   const entry = validItems.map(toCiteprocEntry);
 
+  let template = DEFAULT_TEMPLATE;
+  if (options.cslStyle) {
+    cslConfig.templates.add(CUSTOM_TEMPLATE_KEY, options.cslStyle);
+    template = CUSTOM_TEMPLATE_KEY;
+  }
+
   try {
     const result = bibliographyData.cite.format("citation", {
       entry,
-      template: "apa",
+      template,
     }) as string;
 
     if (unknownItems.length > 0) {
