@@ -59,4 +59,14 @@ describe("renderCitation", () => {
       expect(result).toContain("unknown_id");
     });
   });
+
+  describe("Step 2: Citation with locator", () => {
+    it("renders citation with page locator", () => {
+      const result = renderCitation(
+        [{ id: "smith2020", locator: { label: "page", value: "10" } }],
+        defaultOptions(),
+      );
+      expect(result).toBe("(Smith, 2020, p. 10)");
+    });
+  });
 });
