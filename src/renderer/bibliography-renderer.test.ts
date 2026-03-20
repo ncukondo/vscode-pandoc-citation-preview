@@ -82,4 +82,18 @@ describe("renderBibliography", () => {
       expect(result).not.toContain("nonexistent");
     });
   });
+
+  describe("Step 3: nocite wildcard (@*)", () => {
+    it("includes all entries when nocite contains '*'", () => {
+      const result = renderBibliography({
+        bibliographyData: threeEntries(),
+        citedIds: [],
+        nocite: ["*"],
+        cslStyle: null,
+      });
+      expect(result).toContain("Smith");
+      expect(result).toContain("Doe");
+      expect(result).toContain("Adams");
+    });
+  });
 });
