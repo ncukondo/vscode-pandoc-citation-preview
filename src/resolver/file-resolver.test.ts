@@ -81,4 +81,26 @@ describe("resolvePath", () => {
       expect(resolvePath("refs.bib", ctx)).toBeNull();
     });
   });
+
+  // ─── Step 4: Fallback to workspace root ──────────────────────────────────
+
+  describe("Step 4: Fallback to workspace root", () => {
+    it("resolves from workspace root when not found elsewhere", () => {
+      const ctx = makeContext(["/workspace/refs.bib"], {
+        mdFileDir: "/project/docs",
+        searchDirectories: [],
+        workspaceRoot: "/workspace",
+      });
+      expect(resolvePath("refs.bib", ctx)).toBe("/workspace/refs.bib");
+    });
+
+    it("returns null when not found anywhere", () => {
+      const ctx = makeContext([], {
+        mdFileDir: "/project/docs",
+        searchDirectories: ["/shared/bib"],
+        workspaceRoot: "/workspace",
+      });
+      expect(resolvePath("refs.bib", ctx)).toBeNull();
+    });
+  });
 });

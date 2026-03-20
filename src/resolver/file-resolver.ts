@@ -44,5 +44,11 @@ export function resolvePath(
     }
   }
 
+  // Fallback: workspace root
+  const fromRoot = joinPath(context.workspaceRoot, filePath);
+  if (context.exists(fromRoot)) {
+    return fromRoot;
+  }
+
   return null;
 }
