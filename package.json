@@ -25,6 +25,8 @@
     "package": "vsce package"
   },
   "dependencies": {
+    "@citation-js/core": "^0.7.21",
+    "@citation-js/plugin-bibtex": "^0.7.21",
     "yaml": "^2.7.0"
   },
   "devDependencies": {

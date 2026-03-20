@@ -35,56 +35,56 @@ function loadBibliography(options: LoadOptions): BibliographyData;
 
 ### Step 1: Load BibTeX (.bib) file
 
-- [ ] Write test: parse a simple .bib string with one entry → correct id extracted
-- [ ] Write test: parse .bib with multiple entries → all ids available
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: parse a simple .bib string with one entry → correct id extracted
+- [x] Write test: parse .bib with multiple entries → all ids available
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 2: Load CSL JSON (.json) file
 
-- [ ] Write test: parse CSL JSON array with one entry → correct id
-- [ ] Write test: parse CSL JSON with multiple entries → all ids
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: parse CSL JSON array with one entry → correct id
+- [x] Write test: parse CSL JSON with multiple entries → all ids
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 3: Load CSL YAML (.yaml) file
 
-- [ ] Write test: parse CSL YAML → convert to JSON → correct ids
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: parse CSL YAML → convert to JSON → correct ids
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 4: Merge inline references
 
-- [ ] Write test: inline references added to cite instance → ids available
-- [ ] Write test: inline reference with same id as .bib entry → inline wins
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: inline references added to cite instance → ids available
+- [x] Write test: inline reference with same id as .bib entry → inline wins
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 5: Multiple bibliography files
 
-- [ ] Write test: two .bib files → all ids merged
-- [ ] Write test: mixed formats (.bib + .json) → all ids merged
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: two .bib files → all ids merged
+- [x] Write test: mixed formats (.bib + .json) → all ids merged
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 6: Error handling
 
-- [ ] Write test: invalid BibTeX → graceful error (empty or partial result)
-- [ ] Write test: file read failure → graceful error
-- [ ] Write test: empty bibliography list + no inline refs → empty BibliographyData
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: invalid BibTeX → graceful error (empty or partial result)
+- [x] Write test: file read failure → graceful error
+- [x] Write test: empty bibliography list + no inline refs → empty BibliographyData
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ## Completion Checklist
 
-- [ ] All tests pass
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] Lint passes
+- [x] Type check passes
+- [x] Build succeeds
 - [ ] Move file to `spec/tasks/completed/`
