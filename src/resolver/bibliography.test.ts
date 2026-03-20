@@ -95,4 +95,27 @@ describe("loadBibliography", () => {
       expect(result.ids).toHaveLength(2);
     });
   });
+
+  describe("Step 3: Load CSL YAML (.yaml) file", () => {
+    it("parses CSL YAML and extracts correct ids", async () => {
+      const cslYaml = `- id: kim2020
+  type: article-journal
+  title: YAML Article
+  author:
+    - family: Kim
+      given: Sue
+  issued:
+    date-parts:
+      - [2020]
+`;
+      const result = await loadBibliography({
+        bibliographyPaths: ["/path/to/refs.yaml"],
+        inlineReferences: [],
+        readFile: async () => cslYaml,
+      });
+
+      expect(result.ids).toContain("kim2020");
+      expect(result.ids).toHaveLength(1);
+    });
+  });
 });
