@@ -30,5 +30,11 @@ export function resolvePath(
     return context.exists(filePath) ? filePath : null;
   }
 
+  // Relative path: resolve from markdown file directory
+  const fromMdDir = joinPath(context.mdFileDir, filePath);
+  if (context.exists(fromMdDir)) {
+    return fromMdDir;
+  }
+
   return null;
 }

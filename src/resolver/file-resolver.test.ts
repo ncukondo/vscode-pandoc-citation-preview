@@ -32,4 +32,24 @@ describe("resolvePath", () => {
       expect(resolvePath("/absolute/path/refs.bib", ctx)).toBeNull();
     });
   });
+
+  // ─── Step 2: Relative path from markdown file directory ────────────────
+
+  describe("Step 2: Relative path from markdown file directory", () => {
+    it("resolves simple relative path from mdFileDir", () => {
+      const ctx = makeContext(["/project/docs/refs.bib"], {
+        mdFileDir: "/project/docs",
+      });
+      expect(resolvePath("refs.bib", ctx)).toBe("/project/docs/refs.bib");
+    });
+
+    it("resolves ../ relative path from mdFileDir", () => {
+      const ctx = makeContext(["/project/bib/refs.bib"], {
+        mdFileDir: "/project/docs",
+      });
+      expect(resolvePath("../bib/refs.bib", ctx)).toBe(
+        "/project/bib/refs.bib",
+      );
+    });
+  });
 });
