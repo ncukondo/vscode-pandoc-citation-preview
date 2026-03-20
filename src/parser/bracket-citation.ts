@@ -23,7 +23,7 @@ export function parseBracketCitation(
 ): BracketCitation | null {
   if (src[pos] !== "[") return null;
 
-  // Find the closing bracket (no nesting support for now)
+  // Find the closing bracket (supports nested brackets via depth tracking)
   const closeIdx = findClosingBracket(src, pos);
   if (closeIdx === -1) return null;
 

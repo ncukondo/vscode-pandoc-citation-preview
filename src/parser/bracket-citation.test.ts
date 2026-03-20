@@ -84,7 +84,7 @@ describe("parseBracketCitation", () => {
       expect(parseBracketCitation("[@smith2020", 0)).toBeNull();
     });
 
-    it('handles "[@smith[nested]2020]" — uses first ] as close', () => {
+    it('handles "[@smith[nested]2020]" — uses outer ] as close via depth tracking', () => {
       const result = parseBracketCitation("[@smith[nested]2020]", 0);
       // The nested brackets create depth tracking: [... [nested] ...]
       // With depth tracking, the outer ] at pos 19 is the match
