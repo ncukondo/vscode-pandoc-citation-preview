@@ -3,13 +3,14 @@ import type Token from "markdown-it/lib/token.mjs";
 import type StateCore from "markdown-it/lib/rules_core/state_core.mjs";
 import type StateInline from "markdown-it/lib/rules_inline/state_inline.mjs";
 import { Cite } from "@citation-js/core";
-import "@citation-js/plugin-bibtex";
 import "@citation-js/plugin-csl";
-import { parse as parseYaml } from "yaml";
 import { extractCitationMetadata } from "./metadata/yaml-extractor";
 import { parseBracketCitation } from "./parser/bracket-citation";
 import { parseInlineCitation } from "./parser/inline-citation";
-import type { BibliographyData } from "./resolver/bibliography";
+import {
+  type BibliographyData,
+  loadBibliographySync,
+} from "./resolver/bibliography";
 import { resolvePath, resolveDefaultBibliography } from "./resolver/file-resolver";
 import type { SingleCitation } from "./parser/single-citation";
 
@@ -98,7 +99,11 @@ export function pandocCitationPlugin(
 
     // Load bibliography synchronously
     const bibPaths = resolveBibliographyPaths(metadata.bibliography, opts);
-    const bibData = loadBibliographySync(bibPaths, metadata.references, opts);
+    const bibData = loadBibliographySync({
+      bibliographyPaths: bibPaths,
+      inlineReferences: metadata.references,
+      readFile: opts.readFileSync || (() => ""),
+    });
     env.bibliographyData = bibData;
     env.nocite = metadata.nocite;
 
@@ -191,7 +196,7 @@ function renderBracketCitation(
     const parts: string[] = [];
     for (const c of citations) {
       if (knownIds.has(c.id)) {
-        parts.push(renderSingleCitationText(c, bibData, env.cslStyle));
+        parts.push(escapeHtml(renderSingleCitationText(c, bibData, env.cslStyle)));
       } else {
         parts.push(`<span class="pandoc-citation-warning">@${escapeHtml(c.id)}</span>`);
       }
@@ -215,7 +220,7 @@ function renderInlineCitation(
   env: CitationEnv,
 ): string {
   const bibData = env.bibliographyData;
-  if (!bibData || !bibData.ids.includes(id)) {
+  if (!bibData || !new Set(bibData.ids).has(id)) {
     return `<cite class="pandoc-citation pandoc-citation-inline pandoc-citation-warning">@${escapeHtml(id)}</cite>`;
   }
 
@@ -239,8 +244,8 @@ function renderCitationGroup(
   cslStyle?: string | null,
 ): string {
   // Build a Cite with just the referenced entries
-  const ids = citations.map((c) => c.id);
-  const entries = bibData.cite.data.filter((e) => ids.includes(e.id));
+  const idSet = new Set(citations.map((c) => c.id));
+  const entries = bibData.cite.data.filter((e) => idSet.has(e.id));
   if (entries.length === 0) return "";
 
   const subset = new Cite(entries);
@@ -282,7 +287,7 @@ function renderSingleCitationText(
   cslStyle?: string | null,
 ): string {
   const entry = bibData.cite.data.find((e) => e.id === citation.id);
-  if (!entry) return `@${citation.id}`;
+  if (!entry) return `@${escapeHtml(citation.id)}`;
   const subset = new Cite([entry]);
   let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa" }));
   text = text.replace(/^\((.+)\)$/, "$1");
@@ -299,6 +304,7 @@ function renderBibliographyHtml(
 
   // Determine which entries to include
   const includeIds = new Set(citedIds);
+  const bibIdSet = new Set(bibData.ids);
 
   if (nocite.includes("*")) {
     // Include all entries
@@ -307,7 +313,7 @@ function renderBibliographyHtml(
     }
   } else {
     for (const id of nocite) {
-      if (bibData.ids.includes(id)) {
+      if (bibIdSet.has(id)) {
         includeIds.add(id);
       }
     }
@@ -339,7 +345,7 @@ function resolveBibliographyPaths(
 
   const context = {
     mdFileDir: opts.mdFilePath
-      ? opts.mdFilePath.replace(/\/[^/]+$/, "")
+      ? dirName(opts.mdFilePath)
       : opts.workspaceRoot || "",
     searchDirectories: opts.searchDirectories || [],
     workspaceRoot: opts.workspaceRoot || "",
@@ -363,42 +369,6 @@ function resolveBibliographyPaths(
   return resolved;
 }
 
-function loadBibliographySync(
-  paths: string[],
-  inlineReferences: Array<{ id: string; [key: string]: unknown }>,
-  opts: PluginOptions,
-): BibliographyData {
-  const cite = new Cite();
-
-  for (const filePath of paths) {
-    try {
-      const content = opts.readFileSync
-        ? opts.readFileSync(filePath)
-        : "";
-      if (content) {
-        if (/\.ya?ml$/i.test(filePath)) {
-          // YAML files need parsing first - reuse the yaml import from bibliography.ts
-          // For simplicity, just add as-is (citation-js handles CSL JSON)
-          cite.add(parseYaml(content));
-        } else {
-          cite.add(content);
-        }
-      }
-    } catch {
-      // Skip files that fail to read or parse
-    }
-  }
-
-  // Merge inline references
-  if (inlineReferences.length > 0) {
-    const inlineIds = new Set(inlineReferences.map((r) => r.id));
-    cite.data = cite.data.filter((entry) => !inlineIds.has(entry.id));
-    cite.add(inlineReferences);
-  }
-
-  return { cite, ids: cite.getIds() };
-}
-
 function loadCslStyle(
   cslPath: string | null,
   opts: PluginOptions,
@@ -407,7 +377,7 @@ function loadCslStyle(
 
   const context = {
     mdFileDir: opts.mdFilePath
-      ? opts.mdFilePath.replace(/\/[^/]+$/, "")
+      ? dirName(opts.mdFilePath)
       : opts.workspaceRoot || "",
     searchDirectories: opts.cslSearchDirectories || [],
     workspaceRoot: opts.workspaceRoot || "",
@@ -433,6 +403,10 @@ function walkTokens(tokens: Token[], fn: (token: Token) => void): void {
       walkTokens(token.children, fn);
     }
   }
+}
+
+function dirName(filePath: string): string {
+  return filePath.replace(/\/[^/]+$/, "");
 }
 
 function escapeHtml(str: string): string {
