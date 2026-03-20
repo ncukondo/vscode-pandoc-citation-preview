@@ -168,4 +168,49 @@ describe("loadBibliography", () => {
       expect(entry?.title).toBe("Overridden Title");
     });
   });
+
+  describe("Step 5: Multiple bibliography files", () => {
+    it("merges ids from two .bib files", async () => {
+      const bib1 = `@article{alpha, author={A}, title={T1}, journal={J}, year={2020}}`;
+      const bib2 = `@article{beta, author={B}, title={T2}, journal={J}, year={2021}}`;
+      const files: Record<string, string> = {
+        "/refs1.bib": bib1,
+        "/refs2.bib": bib2,
+      };
+      const result = await loadBibliography({
+        bibliographyPaths: ["/refs1.bib", "/refs2.bib"],
+        inlineReferences: [],
+        readFile: async (path) => files[path],
+      });
+
+      expect(result.ids).toContain("alpha");
+      expect(result.ids).toContain("beta");
+      expect(result.ids).toHaveLength(2);
+    });
+
+    it("merges ids from mixed formats (.bib + .json)", async () => {
+      const bibContent = `@article{fromBib, author={A}, title={T1}, journal={J}, year={2020}}`;
+      const jsonContent = JSON.stringify([
+        {
+          id: "fromJson",
+          type: "book",
+          title: "JSON Book",
+          author: [{ family: "B" }],
+        },
+      ]);
+      const files: Record<string, string> = {
+        "/refs.bib": bibContent,
+        "/refs.json": jsonContent,
+      };
+      const result = await loadBibliography({
+        bibliographyPaths: ["/refs.bib", "/refs.json"],
+        inlineReferences: [],
+        readFile: async (path) => files[path],
+      });
+
+      expect(result.ids).toContain("fromBib");
+      expect(result.ids).toContain("fromJson");
+      expect(result.ids).toHaveLength(2);
+    });
+  });
 });
