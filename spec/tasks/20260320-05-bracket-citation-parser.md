@@ -33,13 +33,13 @@ function parseBracketCitation(src: string, pos: number): BracketCitation | null;
 
 ### Step 1: Single citation in brackets
 
-- [ ] Write test: `"[@smith2020]"` at pos 0 → 1 citation
-- [ ] Write test: `"text [@smith2020] more"` at pos 5 → 1 citation, correct startPos/endPos
-- [ ] Write test: `"[no citation]"` at pos 0 → `null` (no `@`)
-- [ ] Write test: not starting with `[` → `null`
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `"[@smith2020]"` at pos 0 → 1 citation
+- [x] Write test: `"text [@smith2020] more"` at pos 5 → 1 citation, correct startPos/endPos
+- [x] Write test: `"[no citation]"` at pos 0 → `null` (no `@`)
+- [x] Write test: not starting with `[` → `null`
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 2: Multiple semicolon-separated citations
 

@@ -34,4 +34,47 @@ describe("parseBracketCitation", () => {
       expect(parseBracketCitation("text", 0)).toBeNull();
     });
   });
+
+  // Step 2: Multiple semicolon-separated citations
+  describe("multiple semicolon-separated citations", () => {
+    it('parses "[@k1; @k2]" → 2 citations', () => {
+      const result = parseBracketCitation("[@k1; @k2]", 0);
+      expect(result).not.toBeNull();
+      expect(result!.citations).toHaveLength(2);
+      expect(result!.citations[0].id).toBe("k1");
+      expect(result!.citations[1].id).toBe("k2");
+    });
+
+    it('parses "[@k1; @k2; @k3]" → 3 citations', () => {
+      const result = parseBracketCitation("[@k1; @k2; @k3]", 0);
+      expect(result).not.toBeNull();
+      expect(result!.citations).toHaveLength(3);
+      expect(result!.citations[0].id).toBe("k1");
+      expect(result!.citations[1].id).toBe("k2");
+      expect(result!.citations[2].id).toBe("k3");
+    });
+
+    it('parses "[see @k1, p. 10; also -@k2, chap. 3]" → 2 citations with full structure', () => {
+      const result = parseBracketCitation(
+        "[see @k1, p. 10; also -@k2, chap. 3]",
+        0,
+      );
+      expect(result).not.toBeNull();
+      expect(result!.citations).toHaveLength(2);
+      expect(result!.citations[0]).toEqual({
+        id: "k1",
+        prefix: "see ",
+        suffix: "",
+        locator: { label: "page", value: "10" },
+        suppressAuthor: false,
+      });
+      expect(result!.citations[1]).toEqual({
+        id: "k2",
+        prefix: " also ",
+        suffix: "",
+        locator: { label: "chapter", value: "3" },
+        suppressAuthor: true,
+      });
+    });
+  });
 });
