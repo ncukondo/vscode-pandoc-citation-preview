@@ -79,22 +79,34 @@ tmux capture-pane -t <pane-id> -p | tail -30
 3. レビューア起動: `./scripts/spawn-reviewer.sh --pr <pr-number>`
 4. レイアウト調整: `./scripts/apply-layout.sh`
 
-### 5. Review Complete → Report to User
+### 5. Review-Fix Loop (autonomous)
 
-レビューア完了時:
-1. レビュー確認: `gh pr view <pr-number> --comments`
-2. レビューア終了: `./scripts/kill-agent.sh <pane-id>`
-3. **全指摘をユーザーに報告**（minor含む）
-4. ユーザーの判断を仰ぐ（マージ or 修正）
+レビューア完了後、指摘ゼロ（LGTM）になるまで自動でループする。
 
-### 6. Fix (if needed)
-
-```bash
-# 修正エージェント起動
-./scripts/launch-agent.sh <worktree-dir> "<fix instructions>"
+```
+while true:
+  1. レビュー結果確認: `gh pr view <pr-number> --comments` で最新コメントを取得
+  2. レビューア終了: `./scripts/kill-agent.sh <pane-id>`
+  3. REVIEW_RESULT マーカーを解析:
+     - verdict: LGTM → ループ終了、Step 6 へ
+     - verdict: NEEDS_CHANGES → 修正エージェントを起動
+  4. 修正エージェント起動:
+     `./scripts/launch-agent.sh <worktree-dir> "<全指摘を含む修正指示>"`
+     - レビューコメントの全指摘（Critical/Improvement/Minor）を修正指示に含める
+     - 修正後に git commit & push するよう指示
+  5. 修正完了を確認（idle になるまで監視）
+  6. 修正エージェント終了: `./scripts/kill-agent.sh <pane-id>`
+  7. 再レビュー: `./scripts/spawn-reviewer.sh --pr <pr-number>`
+  8. レビューア完了を待つ → Step 1 に戻る
 ```
 
-修正完了後、再レビュー（Step 4に戻る）。
+**例外**: スコープに関わる判断が必要な指摘（設計変更、機能追加等）はユーザーに確認を仰ぐ。
+
+### 6. LGTM → Report to User
+
+全指摘が解消されたら:
+1. ユーザーにLGTMを報告
+2. マージの承認を求める
 
 ### 7. Merge (after user approval)
 
