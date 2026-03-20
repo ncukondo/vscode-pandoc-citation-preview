@@ -33,59 +33,59 @@ interface PluginOptions {
 
 ### Step 1: Bracket citation rendering in markdown-it
 
-- [ ] Write test: `md.render("[@smith2020]")` with loaded bib → HTML contains rendered citation
-- [ ] Write test: `md.render("[@unknown]")` → HTML contains warning/fallback
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `md.render("[@smith2020]")` with loaded bib → HTML contains rendered citation
+- [x] Write test: `md.render("[@unknown]")` → HTML contains warning/fallback
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 2: Inline citation rendering in markdown-it
 
-- [ ] Write test: `md.render("@smith2020 says")` with loaded bib → HTML contains author-style citation
-- [ ] Write test: `md.render("@smith2020 [p. 10] says")` → citation with locator
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `md.render("@smith2020 says")` with loaded bib → HTML contains author-style citation
+- [x] Write test: `md.render("@smith2020 [p. 10] says")` → citation with locator
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 3: Bibliography injection
 
-- [ ] Write test: document with citations → rendered HTML ends with bibliography section
-- [ ] Write test: document with `nocite: @*` → all bib entries in bibliography
-- [ ] Write test: document with no citations and no nocite → no bibliography section
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: document with citations → rendered HTML ends with bibliography section
+- [x] Write test: document with `nocite: @*` → all bib entries in bibliography
+- [x] Write test: document with no citations and no nocite → no bibliography section
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 4: YAML metadata integration
 
-- [ ] Write test: document with frontmatter `bibliography: refs.bib` → bibliography loaded and used
-- [ ] Write test: document with `csl: ieee.csl` → citation style applied
-- [ ] Write test: document with inline `references` → used for rendering
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: document with frontmatter `bibliography: refs.bib` → bibliography loaded and used
+- [x] Write test: document with `csl: ieee.csl` → citation style applied
+- [x] Write test: document with inline `references` → used for rendering
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 5: Citations do not interfere with other markdown
 
-- [ ] Write test: email addresses not parsed as citations
-- [ ] Write test: code blocks with `@` not parsed as citations
-- [ ] Write test: links with `@` in URL not parsed as citations
-- [ ] Write test: normal markdown (headings, bold, lists) unaffected
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: email addresses not parsed as citations
+- [x] Write test: code blocks with `@` not parsed as citations
+- [x] Write test: links with `@` in URL not parsed as citations
+- [x] Write test: normal markdown (headings, bold, lists) unaffected
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 6: VS Code extension wiring
 
-- [ ] Verify `extension.ts` correctly passes options from VS Code settings to plugin
-- [ ] Verify `contributes.markdown.markdownItPlugins` activates the plugin
+- [x] Verify `extension.ts` correctly passes options from VS Code settings to plugin
+- [x] Verify `contributes.markdown.markdownItPlugins` activates the plugin
 - [ ] Manual test in VS Code
 
 ## Completion Checklist
 
-- [ ] All tests pass
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] Lint passes
+- [x] Type check passes
+- [x] Build succeeds
 - [ ] Manual test in VS Code passes
 - [ ] Move file to `spec/tasks/completed/`

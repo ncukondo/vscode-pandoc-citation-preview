@@ -14,6 +14,12 @@ export interface LoadOptions {
   readFile: (path: string) => string | Promise<string>;
 }
 
+export interface LoadSyncOptions {
+  bibliographyPaths: string[];
+  inlineReferences: CslReference[];
+  readFile: (path: string) => string;
+}
+
 function isYamlFile(filePath: string): boolean {
   return /\.ya?ml$/i.test(filePath);
 }
@@ -31,6 +37,36 @@ export async function loadBibliography(
         cite.add(data);
       } else {
         cite.add(content);
+      }
+    } catch {
+      // Skip files that fail to read or parse
+    }
+  }
+
+  // Merge inline references, overriding any existing entries with the same id
+  if (options.inlineReferences.length > 0) {
+    const inlineIds = new Set(options.inlineReferences.map((r) => r.id));
+    cite.data = cite.data.filter((entry) => !inlineIds.has(entry.id));
+    cite.add(options.inlineReferences);
+  }
+
+  return { cite, ids: cite.getIds() };
+}
+
+export function loadBibliographySync(
+  options: LoadSyncOptions,
+): BibliographyData {
+  const cite = new Cite();
+
+  for (const filePath of options.bibliographyPaths) {
+    try {
+      const content = options.readFile(filePath);
+      if (content) {
+        if (isYamlFile(filePath)) {
+          cite.add(parseYaml(content));
+        } else {
+          cite.add(content);
+        }
       }
     } catch {
       // Skip files that fail to read or parse
