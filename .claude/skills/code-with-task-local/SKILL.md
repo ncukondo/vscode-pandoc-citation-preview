@@ -1,0 +1,57 @@
+---
+name: code-with-task-local
+description: Implements a task locally (without worktree) following TDD with IPC status reporting. Use when working on a task in an existing branch.
+---
+
+# Task Implementation (Local): $ARGUMENTS
+
+spec/_index.mdを起点として必要事項を確認後、spec/tasks/内のタスク `[prefix]-*$ARGUMENTS*.md` に取り組みます。
+
+作業は $ARGUMENTS に結びつけられたブランチ(無ければ妥当な名前を考えて作成)で行います。
+
+## IPC Status Reporting
+
+worktreeルートの `.worker-status.json` にステータスを書き込む:
+
+```bash
+WORKTREE_ROOT="$(git rev-parse --show-toplevel)"
+cat > "$WORKTREE_ROOT/.worker-status.json" <<IPCEOF
+{
+  "branch": "$(git branch --show-current)",
+  "task_file": "<task file path>",
+  "status": "<status>",
+  "current_step": "<step description>",
+  "pr_number": null,
+  "error": null,
+  "updated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+}
+IPCEOF
+```
+
+ステータス値: `starting` → `in_progress` → `testing` → `creating_pr` → `completed` / `failed`
+
+書き込みタイミング:
+- 作業開始時: `starting`
+- 各ステップ着手時: `in_progress` + `current_step` 更新
+- テスト実行時: `testing`
+- PR作成時: `creating_pr`
+- 完了時: `completed` + `pr_number` 設定
+- エラー時: `failed` + `error` 設定
+
+## Workflow
+
+ステップ一つが完了する毎にタスクファイルを更新し、commit。次の作業に移る前に残りのcontextを確認し、次の作業の完了までにcompactが必要になってしまいそうならその時点で作業を中断して下さい。
+
+## Completion Checks
+
+```bash
+npm test
+npm run build
+```
+
+## Work Boundaries
+
+並列作業時のconflictを避けるため:
+
+- **ブランチ内での作業**: 実装 → テスト → PR作成まで
+- **マージ後にmainブランチで**: ROADMAP.md更新とタスクファイルのcompleted/への移動

@@ -1,0 +1,32 @@
+{
+  "name": "vscode-pandoc-citation-preview",
+  "displayName": "Pandoc Citation Preview",
+  "description": "Render Pandoc-style citations (@key, [@key]) in VS Code Markdown Preview",
+  "version": "0.0.1",
+  "publisher": "ncukondo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ncukondo/vscode-pandoc-citation-preview"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "markdown.markdownItPlugins": true
+  },
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "npm run build -- --watch",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/vscode": "^1.80.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.0"
+  }
+}
