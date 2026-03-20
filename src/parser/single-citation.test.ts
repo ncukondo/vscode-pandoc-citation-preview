@@ -78,4 +78,37 @@ describe("parseSingleCitation", () => {
       });
     });
   });
+
+  // Step 4: Locator
+  describe("locator", () => {
+    it('parses "@smith2020, p. 10" with page locator', () => {
+      expect(parseSingleCitation("@smith2020, p. 10")).toEqual({
+        id: "smith2020",
+        prefix: "",
+        suffix: "",
+        locator: { label: "page", value: "10" },
+        suppressAuthor: false,
+      });
+    });
+
+    it('parses "@smith2020, chap. 3" with chapter locator', () => {
+      expect(parseSingleCitation("@smith2020, chap. 3")).toEqual({
+        id: "smith2020",
+        prefix: "",
+        suffix: "",
+        locator: { label: "chapter", value: "3" },
+        suppressAuthor: false,
+      });
+    });
+
+    it('parses "@smith2020, 15" with bare number as page locator', () => {
+      expect(parseSingleCitation("@smith2020, 15")).toEqual({
+        id: "smith2020",
+        prefix: "",
+        suffix: "",
+        locator: { label: "page", value: "15" },
+        suppressAuthor: false,
+      });
+    });
+  });
 });

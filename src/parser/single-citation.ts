@@ -1,4 +1,5 @@
 import type { Locator } from "./locator";
+import { matchLocator } from "./locator";
 import { parseCitationKey } from "./citation-key";
 
 export interface SingleCitation {
@@ -35,11 +36,30 @@ export function parseSingleCitation(text: string): SingleCitation | null {
   const keyResult = parseCitationKey(text, atIndex + 1);
   if (!keyResult) return null;
 
+  // Everything after the key
+  const afterKey = text.slice(keyResult.endPos);
+
+  // Check for comma indicating locator/suffix
+  let locator: Locator | null = null;
+  let suffix = "";
+
+  if (afterKey.startsWith(",")) {
+    const afterComma = afterKey.slice(1);
+    const locatorResult = matchLocator(afterComma);
+    if (locatorResult) {
+      locator = locatorResult.locator;
+      suffix = afterComma.slice(locatorResult.suffixStart);
+    } else {
+      // No recognized locator — everything after the comma is suffix
+      suffix = afterKey;
+    }
+  }
+
   return {
     id: keyResult.key,
     prefix,
-    suffix: "",
-    locator: null,
+    suffix,
+    locator,
     suppressAuthor,
   };
 }
