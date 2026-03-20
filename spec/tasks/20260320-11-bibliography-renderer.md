@@ -31,47 +31,47 @@ function renderBibliography(options: BibliographyRenderOptions): string;  // HTM
 
 ### Step 1: Bibliography from cited entries
 
-- [ ] Write test: 2 cited ids → HTML bibliography with 2 entries
-- [ ] Write test: 0 cited ids, no nocite → empty string
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: 2 cited ids → HTML bibliography with 2 entries
+- [x] Write test: 0 cited ids, no nocite → empty string
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 2: nocite with specific ids
 
-- [ ] Write test: 1 cited + 1 nocite → bibliography with 2 entries
-- [ ] Write test: nocite id that doesn't exist in bibliography → ignored
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: 1 cited + 1 nocite → bibliography with 2 entries
+- [x] Write test: nocite id that doesn't exist in bibliography → ignored
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 3: nocite wildcard (@*)
 
-- [ ] Write test: `nocite: ["*"]` → all entries in bibliography included
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: `nocite: ["*"]` → all entries in bibliography included
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 4: Custom CSL style
 
-- [ ] Write test: different CSL style → output format changes
-- [ ] Write test: null CSL → Chicago author-date default
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: different CSL style → output format changes
+- [x] Write test: null CSL → Chicago author-date default
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ### Step 5: HTML output structure
 
-- [ ] Write test: output is wrapped in a container div with appropriate class
-- [ ] Write test: entries are ordered according to CSL style rules
-- [ ] Create stub (verify Red)
-- [ ] Implement (verify Green)
-- [ ] Lint & type check
+- [x] Write test: output is wrapped in a container div with appropriate class
+- [x] Write test: entries are ordered according to CSL style rules
+- [x] Create stub (verify Red)
+- [x] Implement (verify Green)
+- [x] Lint & type check
 
 ## Completion Checklist
 
-- [ ] All tests pass
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] Lint passes
+- [x] Type check passes
+- [x] Build succeeds
 - [ ] Move file to `spec/tasks/completed/`
