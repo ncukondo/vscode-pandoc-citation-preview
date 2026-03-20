@@ -1,0 +1,13 @@
+.vscode/**
+src/**
+spec/**
+sample/**
+node_modules/**
+.gitignore
+.github/**
+*.vsix
+tsconfig.json
+vitest.config.*
+CLAUDE.md
+**/*.test.ts
+**/*.spec.ts

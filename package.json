@@ -2,17 +2,32 @@
   "name": "vscode-pandoc-citation-preview",
   "displayName": "Pandoc Citation Preview",
   "description": "Render Pandoc-style citations (@key, [@key]) in VS Code Markdown Preview",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "ncukondo",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ncukondo/vscode-pandoc-citation-preview"
+  },
+  "homepage": "https://github.com/ncukondo/vscode-pandoc-citation-preview#readme",
+  "bugs": {
+    "url": "https://github.com/ncukondo/vscode-pandoc-citation-preview/issues"
   },
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "pandoc",
+    "citation",
+    "bibliography",
+    "bibtex",
+    "csl",
+    "markdown",
+    "preview",
+    "academic"
   ],
   "activationEvents": [
     "onLanguage:markdown"
