@@ -24,12 +24,12 @@ Each step follows Red-Green-Refactor.
 
 ### Step 1: Add configuration schema to package.json
 
-- [ ] Add `contributes.configuration` section with title `"Pandoc Citation Preview"`
-- [ ] Define `pandocCitationPreview.defaultCsl`: `string` (default: `""`)
-- [ ] Define `pandocCitationPreview.defaultBibliography`: `array` of `string` (default: `[]`)
-- [ ] Define `pandocCitationPreview.searchDirectories`: `array` of `string` (default: `[]`)
-- [ ] Define `pandocCitationPreview.cslSearchDirectories`: `array` of `string` (default: `[]`)
-- [ ] Add English descriptions for each setting
+- [x] Add `contributes.configuration` section with title `"Pandoc Citation Preview"`
+- [x] Define `pandocCitationPreview.defaultCsl`: `string` (default: `""`)
+- [x] Define `pandocCitationPreview.defaultBibliography`: `array` of `string` (default: `[]`)
+- [x] Define `pandocCitationPreview.searchDirectories`: `array` of `string` (default: `[]`)
+- [x] Define `pandocCitationPreview.cslSearchDirectories`: `array` of `string` (default: `[]`)
+- [x] Add English descriptions for each setting
 
 ### Step 2: Read settings in extension.ts and pass to plugin options
 
