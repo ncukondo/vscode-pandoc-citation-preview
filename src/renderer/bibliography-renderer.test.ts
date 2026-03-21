@@ -202,6 +202,49 @@ describe("renderBibliography", () => {
     });
   });
 
+  describe("Locale support", () => {
+    it("renders with German locale producing different terms", () => {
+      const bibData = makeBibData([
+        {
+          id: "smith2020",
+          family: "Smith",
+          given: "John",
+          year: 2020,
+          type: "book",
+        },
+      ]);
+      // Add editor to the entry data to trigger locale-dependent "Ed." / "Hrsg."
+      bibData.cite.data[0].editor = [{ family: "Editor", given: "Ed" }];
+
+      const enResult = renderBibliography({
+        bibliographyData: bibData,
+        citedIds: ["smith2020"],
+        nocite: [],
+        cslStyle: null,
+      });
+      const deResult = renderBibliography({
+        bibliographyData: bibData,
+        citedIds: ["smith2020"],
+        nocite: [],
+        cslStyle: null,
+        locale: "de-DE",
+      });
+      // English uses "Ed." while German uses "Hrsg."
+      expect(enResult).toContain("Ed.");
+      expect(deResult).toContain("Hrsg.");
+    });
+
+    it("uses default locale when locale is undefined", () => {
+      const result = renderBibliography({
+        bibliographyData: threeEntries(),
+        citedIds: ["smith2020"],
+        nocite: [],
+        cslStyle: null,
+      });
+      expect(result).toContain("Smith");
+    });
+  });
+
   describe("Step 6: HTML output structure", () => {
     it("wraps output in a container div with appropriate class", () => {
       const result = renderBibliography({

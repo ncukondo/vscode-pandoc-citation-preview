@@ -37,6 +37,7 @@ export interface BibliographyRenderOptions {
   citedIds: string[];
   nocite: string[];
   cslStyle: string | null;
+  locale?: string;
 }
 
 export function renderBibliography(options: BibliographyRenderOptions): string {
@@ -85,6 +86,7 @@ export function renderBibliography(options: BibliographyRenderOptions): string {
     const html = selectedCite.format("bibliography", {
       format: "html",
       template,
+      ...(options.locale ? { lang: options.locale } : {}),
     }) as string;
 
     return linkifyUrls(html);

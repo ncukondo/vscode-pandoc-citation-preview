@@ -55,6 +55,18 @@ describe("readExtensionSettings", () => {
     expect(settings.cslSearchDirectories).toEqual(["/lib/csl"]);
   });
 
+  it("reads locale string", () => {
+    const config = createMockConfig({ locale: "de-DE" });
+    const settings = readExtensionSettings(config);
+    expect(settings.locale).toBe("de-DE");
+  });
+
+  it("ignores empty locale string", () => {
+    const config = createMockConfig({ locale: "" });
+    const settings = readExtensionSettings(config);
+    expect(settings.locale).toBeUndefined();
+  });
+
   it("reads popoverEnabled boolean", () => {
     const config = createMockConfig({ popoverEnabled: false });
     const settings = readExtensionSettings(config);
