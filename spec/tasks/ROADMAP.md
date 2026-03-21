@@ -19,7 +19,7 @@
 | 12 | [Extension settings — file resolution](completed/20260321-13-settings-file-resolution.md) | Done | — |
 | 13 | [Extension settings — enabled toggle](completed/20260321-14-settings-enabled.md) | Done | — |
 | 14 | [Extension settings — locale](20260321-15-settings-locale.md) | Planned | — |
-| 15 | [Extension settings — popover toggle](20260321-16-settings-popover.md) | Planned | — |
+| 15 | [Extension settings — popover toggle](completed/20260321-16-settings-popover.md) | Done | — |
 
 ## Dependency Graph
 
