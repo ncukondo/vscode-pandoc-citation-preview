@@ -23,6 +23,7 @@ export interface PluginOptions {
   cslSearchDirectories?: string[];
   defaultBibliography?: string[];
   defaultCsl?: string;
+  popoverEnabled?: boolean;
   readFileSync?: (path: string) => string;
   existsSync?: (path: string) => boolean;
 }
@@ -163,6 +164,7 @@ export function pandocCitationPlugin(
 
   // --- Renderers ---
 
+  const popoverEnabled = opts.popoverEnabled !== false;
   const getPopoverId = () => `pandoc-popover-${popoverCounter++}`;
 
   md.renderer.rules["pandoc_citation"] = (
@@ -170,7 +172,7 @@ export function pandocCitationPlugin(
     idx: number,
   ) => {
     const citations: SingleCitation[] = JSON.parse(tokens[idx].content);
-    return renderBracketCitation(citations, currentBibData, currentCslStyle, getPopoverId);
+    return renderBracketCitation(citations, currentBibData, currentCslStyle, popoverEnabled ? getPopoverId : null);
   };
 
   md.renderer.rules["pandoc_citation_inline"] = (
@@ -178,7 +180,7 @@ export function pandocCitationPlugin(
     idx: number,
   ) => {
     const data = JSON.parse(tokens[idx].content);
-    return renderInlineCitation(data.id, data.locator, currentBibData, currentCslStyle, getPopoverId);
+    return renderInlineCitation(data.id, data.locator, currentBibData, currentCslStyle, popoverEnabled ? getPopoverId : null);
   };
 
   md.renderer.rules["pandoc_bibliography"] = (
@@ -201,7 +203,7 @@ function renderBracketCitation(
   citations: SingleCitation[],
   bibData: BibliographyData | undefined,
   cslStyle: string | null,
-  getPopoverId: () => string,
+  getPopoverId: (() => string) | null,
 ): string {
   if (!bibData || bibData.ids.length === 0) {
     return renderFallbackBracket(citations);
@@ -210,7 +212,7 @@ function renderBracketCitation(
   const knownIds = new Set(bibData.ids);
   const allKnown = citations.every((c) => knownIds.has(c.id));
   const knownCitations = citations.filter((c) => knownIds.has(c.id));
-  const tooltipHtml = bibliographyTooltipHtml(knownCitations.map((c) => c.id), bibData, cslStyle);
+  const tooltipHtml = getPopoverId ? bibliographyTooltipHtml(knownCitations.map((c) => c.id), bibData, cslStyle) : "";
   const popover = buildPopover(tooltipHtml, getPopoverId, knownCitations[0]?.id);
 
   if (!allKnown) {
@@ -242,7 +244,7 @@ function renderInlineCitation(
   locator: { label: string; value: string } | null,
   bibData: BibliographyData | undefined,
   cslStyle: string | null,
-  getPopoverId: () => string,
+  getPopoverId: (() => string) | null,
 ): string {
   if (!bibData || !bibData.ids.includes(id)) {
     return `<cite class="pandoc-citation pandoc-citation-inline pandoc-citation-warning">@${escapeHtml(id)}</cite>`;
@@ -259,7 +261,7 @@ function renderInlineCitation(
     text += `, ${locator.label} ${locator.value}`;
   }
 
-  const tooltipHtml = bibliographyTooltipHtml([id], bibData, cslStyle);
+  const tooltipHtml = getPopoverId ? bibliographyTooltipHtml([id], bibData, cslStyle) : "";
   const popover = buildPopover(tooltipHtml, getPopoverId, id);
 
   return `<cite class="pandoc-citation pandoc-citation-inline">${popover.wrapInvoker(escapeHtml(text))}</cite>${popover.element}`;
@@ -334,10 +336,10 @@ function bibliographyTooltipHtml(
 
 function buildPopover(
   tooltipHtml: string,
-  getPopoverId: () => string,
+  getPopoverId: (() => string) | null,
   refId?: string,
 ): { wrapInvoker: (content: string) => string; element: string } {
-  if (!tooltipHtml) {
+  if (!tooltipHtml || !getPopoverId) {
     return {
       wrapInvoker: (content) => content,
       element: "",

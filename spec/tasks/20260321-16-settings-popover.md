@@ -17,28 +17,28 @@ Each step follows Red-Green-Refactor.
 
 ### Step 1: Add popoverEnabled setting to package.json
 
-- [ ] Define `pandocCitationPreview.popoverEnabled`: `boolean` (default: `true`)
-- [ ] Add description
+- [x] Define `pandocCitationPreview.popoverEnabled`: `boolean` (default: `true`)
+- [x] Add description
 
 ### Step 2: Handle popoverEnabled in plugin.ts
 
-- [ ] Write test: `popoverEnabled: false` → rendered HTML does not contain popover elements (`pandoc-citation-popover`)
-- [ ] Write test: `popoverEnabled: false` → citation text still renders correctly
-- [ ] Write test: `popoverEnabled: true` (default) → popovers are included
-- [ ] Add `popoverEnabled?: boolean` to `PluginOptions`
-- [ ] Implement: conditional popover generation
-- [ ] Lint & type check
+- [x] Write test: `popoverEnabled: false` → rendered HTML does not contain popover elements (`pandoc-citation-popover`)
+- [x] Write test: `popoverEnabled: false` → citation text still renders correctly
+- [x] Write test: `popoverEnabled: true` (default) → popovers are included
+- [x] Add `popoverEnabled?: boolean` to `PluginOptions`
+- [x] Implement: conditional popover generation
+- [x] Lint & type check
 
 ### Step 3: Wire up in extension.ts
 
-- [ ] Read `popoverEnabled` from `vscode.workspace.getConfiguration`
-- [ ] Pass to `PluginOptions`
-- [ ] Lint & type check
+- [x] Read `popoverEnabled` from `vscode.workspace.getConfiguration`
+- [x] Pass to `PluginOptions`
+- [x] Lint & type check
 
 ## Completion Checklist
 
-- [ ] All tests pass
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] Lint passes
+- [x] Type check passes
+- [x] Build succeeds
 - [ ] Move file to `spec/tasks/completed/`
