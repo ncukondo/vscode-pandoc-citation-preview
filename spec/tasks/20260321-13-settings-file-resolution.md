@@ -49,17 +49,17 @@ Each step follows Red-Green-Refactor.
 
 ### Step 4: defaultBibliography behavior
 
-- [ ] Write test: `defaultBibliography` set to bib file path → citations resolved without YAML metadata
-- [ ] Write test: both YAML `bibliography` and `defaultBibliography` present → both loaded
-- [ ] Implement (plugin.ts already has `resolveDefaultBibliography` support — verify and wire up)
-- [ ] Lint & type check
+- [x] Write test: `defaultBibliography` set to bib file path → citations resolved without YAML metadata
+- [x] Write test: both YAML `bibliography` and `defaultBibliography` present → both loaded
+- [x] Implement (plugin.ts already has `resolveDefaultBibliography` support — verify and wire up)
+- [x] Lint & type check
 
 ### Step 5: searchDirectories / cslSearchDirectories behavior
 
-- [ ] Write test: `searchDirectories` specified → bibliography files resolved from those directories
-- [ ] Write test: `cslSearchDirectories` specified → CSL files resolved from those directories
-- [ ] Implement
-- [ ] Lint & type check
+- [x] Write test: `searchDirectories` specified → bibliography files resolved from those directories
+- [x] Write test: `cslSearchDirectories` specified → CSL files resolved from those directories
+- [x] Implement
+- [x] Lint & type check
 
 ## Completion Checklist
 
