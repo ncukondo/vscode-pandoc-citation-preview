@@ -31,11 +31,11 @@ Each step follows Red-Green-Refactor.
 
 ### Step 3: Add locale support to bibliography-renderer
 
-- [ ] Write test: `lang` option changes bibliography output locale
-- [ ] Add `locale?: string` to `BibliographyRenderOptions`
-- [ ] Pass `lang` option to `format()` call in `renderBibliography`
-- [ ] Implement
-- [ ] Lint & type check
+- [x] Write test: `lang` option changes bibliography output locale
+- [x] Add `locale?: string` to `BibliographyRenderOptions`
+- [x] Pass `lang` option to `format()` call in `renderBibliography`
+- [x] Implement
+- [x] Lint & type check
 
 ### Step 4: Propagate locale through plugin.ts / hover.ts / extension.ts
 
