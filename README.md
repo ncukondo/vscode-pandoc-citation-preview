@@ -1,6 +1,8 @@
 # Pandoc Citation Preview
 
-A VS Code extension that renders Pandoc-style citations (`@key`, `[@key]`) in the built-in Markdown Preview. It loads bibliography data from BibTeX / CSL-JSON files and generates formatted citations and reference lists.
+A lightweight VS Code extension that renders Pandoc-style citations (`@key`, `[@key]`) directly in the built-in Markdown Preview — **no Pandoc installation required**. It uses citation-js to parse bibliography data from BibTeX / CSL-JSON files and generates formatted citations and reference lists entirely within VS Code.
+
+![Demo](images/screen-record.gif)
 
 ## Features
 
@@ -60,7 +62,9 @@ bibliography:
 
 ### 3. Inline references
 
-```yaml
+You can define references directly in YAML frontmatter and cite them in the same document:
+
+```markdown
 ---
 references:
   - id: smith2020
@@ -73,7 +77,13 @@ references:
       date-parts:
         - [2020]
 ---
+
+According to @smith2020, this approach works well.
+
+More details can be found in [@smith2020, p. 42].
 ```
+
+This is useful for self-contained documents that don't need an external bibliography file.
 
 ### 4. Custom CSL style
 
@@ -86,12 +96,61 @@ csl: chicago-author-date.csl
 
 ### 5. nocite
 
+Include entries in the bibliography without citing them in the text:
+
 ```yaml
 ---
 bibliography: refs.bib
 nocite: "@*"
 ---
 ```
+
+To include specific uncited entries:
+
+```yaml
+---
+bibliography: refs.bib
+nocite: |
+  @smith2020
+  @johnson2019
+---
+```
+
+### 6. Bibliography placement
+
+By default, the bibliography is appended at the end of the document. To control placement, use the Pandoc `refs` div:
+
+```markdown
+## References
+
+::: {#refs}
+:::
+
+## Appendix
+
+Additional content after the bibliography.
+```
+
+## Extension Settings
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `pandocCitationPreview.enabled` | boolean | `true` | Enable/disable the extension |
+| `pandocCitationPreview.defaultBibliography` | string[] | `[]` | Default bibliography file paths (loaded in addition to YAML frontmatter) |
+| `pandocCitationPreview.defaultCsl` | string | `""` | Default CSL style name (e.g. `"ieee"`) or file path |
+| `pandocCitationPreview.searchDirectories` | string[] | `[]` | Search directories for bibliography files |
+| `pandocCitationPreview.cslSearchDirectories` | string[] | `[]` | Search directories for CSL style files |
+| `pandocCitationPreview.locale` | string | `""` | Locale for citation rendering (e.g. `"en-US"`, `"ja-JP"`, `"de-DE"`) |
+| `pandocCitationPreview.popoverEnabled` | boolean | `true` | Enable citation popover tooltips in the preview |
+
+### File path resolution
+
+Bibliography and CSL file paths are resolved in the following order:
+
+1. **Absolute path** — used as-is
+2. **Relative to the markdown file** directory
+3. **Search directories** — `searchDirectories` / `cslSearchDirectories`
+4. **Workspace root**
 
 ## Supported Citation Syntax
 
@@ -103,6 +162,7 @@ nocite: "@*"
 | `[@key1; @key2]` | Multiple citations |
 | `[-@key]` | Suppress author |
 | `[see @key]` | With prefix |
+| `[see @key, p. 10]` | With prefix and locator |
 | `@key [p. 10]` | Inline with locator |
 
 ### Supported Locators
