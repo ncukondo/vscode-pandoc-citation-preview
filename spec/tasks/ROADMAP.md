@@ -18,7 +18,7 @@
 | 11 | [markdown-it plugin integration](completed/20260320-12-markdownit-plugin.md) | Done | — |
 | 12 | [Extension settings — file resolution](completed/20260321-13-settings-file-resolution.md) | Done | — |
 | 13 | [Extension settings — enabled toggle](completed/20260321-14-settings-enabled.md) | Done | — |
-| 14 | [Extension settings — locale](20260321-15-settings-locale.md) | Planned | — |
+| 14 | [Extension settings — locale](completed/20260321-15-settings-locale.md) | Done | — |
 | 15 | [Extension settings — popover toggle](completed/20260321-16-settings-popover.md) | Done | — |
 
 ## Dependency Graph
