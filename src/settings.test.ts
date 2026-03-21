@@ -73,6 +73,24 @@ describe("readExtensionSettings", () => {
     expect(settings.popoverEnabled).toBeUndefined();
   });
 
+  it("reads enabled as true", () => {
+    const config = createMockConfig({ enabled: true });
+    const settings = readExtensionSettings(config);
+    expect(settings.enabled).toBe(true);
+  });
+
+  it("reads enabled as false", () => {
+    const config = createMockConfig({ enabled: false });
+    const settings = readExtensionSettings(config);
+    expect(settings.enabled).toBe(false);
+  });
+
+  it("defaults enabled to true when not set", () => {
+    const config = createMockConfig({});
+    const settings = readExtensionSettings(config);
+    expect(settings.enabled).toBe(true);
+  });
+
   it("ignores empty arrays", () => {
     const config = createMockConfig({
       defaultBibliography: [],
