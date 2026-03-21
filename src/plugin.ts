@@ -37,7 +37,7 @@ export function pandocCitationPlugin(
   // (VS Code may use different env objects for parse and render)
   let currentBibData: BibliographyData | undefined;
   let currentCslStyle: string | null = null;
-  let currentLocale: string | undefined = opts.locale;
+  const currentLocale: string | undefined = opts.locale;
   let popoverCounter = 0;
 
   // --- Inline rules ---
