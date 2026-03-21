@@ -32,6 +32,7 @@ export interface HoverProviderOptions {
   cslSearchDirectories?: string[];
   defaultBibliography?: string[];
   defaultCsl?: string;
+  locale?: string;
 }
 
 export function createCitationHoverProvider(
@@ -116,7 +117,7 @@ export function createCitationHoverProvider(
 
       try {
         const html = linkifyUrls(
-          String(subset.format("bibliography", { format: "html", template })),
+          String(subset.format("bibliography", { format: "html", template, ...(options.locale ? { lang: options.locale } : {}) })),
         );
         const md = new vscode.MarkdownString(html);
         md.supportHtml = true;

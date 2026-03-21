@@ -39,16 +39,16 @@ Each step follows Red-Green-Refactor.
 
 ### Step 4: Propagate locale through plugin.ts / hover.ts / extension.ts
 
-- [ ] Add `locale?: string` to `PluginOptions`
-- [ ] Pass locale to citation/bibliography renderers in plugin.ts
-- [ ] Pass locale in hover.ts
-- [ ] Read setting in extension.ts and pass to options
-- [ ] Lint & type check
+- [x] Add `locale?: string` to `PluginOptions`
+- [x] Pass locale to citation/bibliography renderers in plugin.ts
+- [x] Pass locale in hover.ts
+- [x] Read setting in extension.ts and pass to options
+- [x] Lint & type check
 
 ## Completion Checklist
 
-- [ ] All tests pass
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Build succeeds
+- [x] All tests pass
+- [x] Lint passes
+- [x] Type check passes
+- [x] Build succeeds
 - [ ] Move file to `spec/tasks/completed/`

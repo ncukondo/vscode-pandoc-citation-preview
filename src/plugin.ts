@@ -22,6 +22,7 @@ export interface PluginOptions {
   cslSearchDirectories?: string[];
   defaultBibliography?: string[];
   defaultCsl?: string;
+  locale?: string;
   readFileSync?: (path: string) => string;
   existsSync?: (path: string) => boolean;
 }
@@ -36,6 +37,7 @@ export function pandocCitationPlugin(
   // (VS Code may use different env objects for parse and render)
   let currentBibData: BibliographyData | undefined;
   let currentCslStyle: string | null = null;
+  let currentLocale: string | undefined = opts.locale;
   let popoverCounter = 0;
 
   // --- Inline rules ---
@@ -166,7 +168,7 @@ export function pandocCitationPlugin(
     idx: number,
   ) => {
     const citations: SingleCitation[] = JSON.parse(tokens[idx].content);
-    return renderBracketCitation(citations, currentBibData, currentCslStyle, getPopoverId);
+    return renderBracketCitation(citations, currentBibData, currentCslStyle, getPopoverId, currentLocale);
   };
 
   md.renderer.rules["pandoc_citation_inline"] = (
@@ -174,7 +176,7 @@ export function pandocCitationPlugin(
     idx: number,
   ) => {
     const data = JSON.parse(tokens[idx].content);
-    return renderInlineCitation(data.id, data.locator, currentBibData, currentCslStyle, getPopoverId);
+    return renderInlineCitation(data.id, data.locator, currentBibData, currentCslStyle, getPopoverId, currentLocale);
   };
 
   md.renderer.rules["pandoc_bibliography"] = (
@@ -187,6 +189,7 @@ export function pandocCitationPlugin(
       data.nocite,
       currentBibData,
       currentCslStyle,
+      currentLocale,
     );
   };
 }
@@ -198,6 +201,7 @@ function renderBracketCitation(
   bibData: BibliographyData | undefined,
   cslStyle: string | null,
   getPopoverId: () => string,
+  locale?: string,
 ): string {
   if (!bibData || bibData.ids.length === 0) {
     return renderFallbackBracket(citations);
@@ -206,7 +210,7 @@ function renderBracketCitation(
   const knownIds = new Set(bibData.ids);
   const allKnown = citations.every((c) => knownIds.has(c.id));
   const knownCitations = citations.filter((c) => knownIds.has(c.id));
-  const tooltipHtml = bibliographyTooltipHtml(knownCitations.map((c) => c.id), bibData, cslStyle);
+  const tooltipHtml = bibliographyTooltipHtml(knownCitations.map((c) => c.id), bibData, cslStyle, locale);
   const popover = buildPopover(tooltipHtml, getPopoverId, knownCitations[0]?.id);
 
   if (!allKnown) {
@@ -214,7 +218,7 @@ function renderBracketCitation(
     const parts: string[] = [];
     for (const c of citations) {
       if (knownIds.has(c.id)) {
-        parts.push(escapeHtml(renderSingleCitationText(c, bibData, cslStyle)));
+        parts.push(escapeHtml(renderSingleCitationText(c, bibData, cslStyle, locale)));
       } else {
         parts.push(`<span class="pandoc-citation-warning">@${escapeHtml(c.id)}</span>`);
       }
@@ -224,7 +228,7 @@ function renderBracketCitation(
   }
 
   // All known - render using citation-js
-  const text = renderCitationGroup(citations, bibData, cslStyle);
+  const text = renderCitationGroup(citations, bibData, cslStyle, locale);
   return `<cite class="pandoc-citation">${popover.wrapInvoker(escapeHtml(text))}</cite>${popover.element}`;
 }
 
@@ -239,13 +243,15 @@ function renderInlineCitation(
   bibData: BibliographyData | undefined,
   cslStyle: string | null,
   getPopoverId: () => string,
+  locale?: string,
 ): string {
   if (!bibData || !bibData.ids.includes(id)) {
     return `<cite class="pandoc-citation pandoc-citation-inline pandoc-citation-warning">@${escapeHtml(id)}</cite>`;
   }
 
+  const langOpt = locale ? { lang: locale } : {};
   const subset = new Cite(bibData.cite.data.filter((e) => e.id === id));
-  let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa" }));
+  let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa", ...langOpt }));
 
   // For inline citation, show "Author (Year)" style instead of "(Author, Year)"
   // Strip outer parentheses if present
@@ -255,7 +261,7 @@ function renderInlineCitation(
     text += `, ${locator.label} ${locator.value}`;
   }
 
-  const tooltipHtml = bibliographyTooltipHtml([id], bibData, cslStyle);
+  const tooltipHtml = bibliographyTooltipHtml([id], bibData, cslStyle, locale);
   const popover = buildPopover(tooltipHtml, getPopoverId, id);
 
   return `<cite class="pandoc-citation pandoc-citation-inline">${popover.wrapInvoker(escapeHtml(text))}</cite>${popover.element}`;
@@ -265,14 +271,16 @@ function renderCitationGroup(
   citations: SingleCitation[],
   bibData: BibliographyData,
   cslStyle?: string | null,
+  locale?: string,
 ): string {
   // Build a Cite with just the referenced entries
   const idSet = new Set(citations.map((c) => c.id));
   const entries = bibData.cite.data.filter((e) => idSet.has(e.id));
   if (entries.length === 0) return "";
 
+  const langOpt = locale ? { lang: locale } : {};
   const subset = new Cite(entries);
-  let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa" }));
+  let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa", ...langOpt }));
 
   // Handle single citation with locator, prefix, suffix
   if (citations.length === 1) {
@@ -308,18 +316,21 @@ function bibliographyTooltipHtml(
   ids: string[],
   bibData: BibliographyData,
   cslStyle?: string | null,
+  locale?: string,
 ): string {
   const entries = bibData.cite.data.filter((e: { id: string }) =>
     ids.includes(e.id),
   );
   if (entries.length === 0) return "";
 
+  const langOpt = locale ? { lang: locale } : {};
   const subset = new Cite(entries);
   try {
     const html = String(
       subset.format("bibliography", {
         format: "html",
         template: cslStyle || "apa",
+        ...langOpt,
       }),
     );
     return linkifyUrls(html);
@@ -352,11 +363,13 @@ function renderSingleCitationText(
   citation: SingleCitation,
   bibData: BibliographyData,
   cslStyle?: string | null,
+  locale?: string,
 ): string {
   const entry = bibData.cite.data.find((e) => e.id === citation.id);
   if (!entry) return `@${citation.id}`;
+  const langOpt = locale ? { lang: locale } : {};
   const subset = new Cite([entry]);
-  let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa" }));
+  let text = String(subset.format("citation", { format: "text", template: cslStyle || "apa", ...langOpt }));
   text = text.replace(/^\((.+)\)$/, "$1");
   return text;
 }
@@ -366,6 +379,7 @@ function renderBibliographyHtml(
   nocite: string[],
   bibData: BibliographyData | undefined,
   cslStyle: string | null,
+  locale?: string,
 ): string {
   if (!bibData || bibData.ids.length === 0) return "";
 
@@ -391,11 +405,13 @@ function renderBibliographyHtml(
   const entries = bibData.cite.data.filter((e) => includeIds.has(e.id));
   if (entries.length === 0) return "";
 
+  const langOpt = locale ? { lang: locale } : {};
   const subset = new Cite(entries);
   const html = String(
     subset.format("bibliography", {
       format: "html",
       template: cslStyle || "apa",
+      ...langOpt,
     }),
   );
 

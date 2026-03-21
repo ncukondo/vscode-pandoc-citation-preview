@@ -3,6 +3,7 @@ export interface ExtensionSettings {
   defaultBibliography?: string[];
   searchDirectories?: string[];
   cslSearchDirectories?: string[];
+  locale?: string;
 }
 
 export interface ConfigGetter {
@@ -30,6 +31,11 @@ export function readExtensionSettings(config: ConfigGetter): ExtensionSettings {
   const cslSearchDirectories = config.get<string[]>("cslSearchDirectories");
   if (cslSearchDirectories && cslSearchDirectories.length > 0) {
     settings.cslSearchDirectories = cslSearchDirectories;
+  }
+
+  const locale = config.get<string>("locale");
+  if (locale) {
+    settings.locale = locale;
   }
 
   return settings;
