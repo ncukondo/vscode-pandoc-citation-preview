@@ -17,8 +17,8 @@ Each step follows Red-Green-Refactor.
 
 ### Step 1: Add enabled setting to package.json
 
-- [ ] Define `pandocCitationPreview.enabled`: `boolean` (default: `true`)
-- [ ] Add description
+- [x] Define `pandocCitationPreview.enabled`: `boolean` (default: `true`)
+- [x] Add description
 
 ### Step 2: Handle enabled flag in plugin.ts
 
