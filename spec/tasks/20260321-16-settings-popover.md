@@ -22,12 +22,12 @@ Each step follows Red-Green-Refactor.
 
 ### Step 2: Handle popoverEnabled in plugin.ts
 
-- [ ] Write test: `popoverEnabled: false` → rendered HTML does not contain popover elements (`pandoc-citation-popover`)
-- [ ] Write test: `popoverEnabled: false` → citation text still renders correctly
-- [ ] Write test: `popoverEnabled: true` (default) → popovers are included
-- [ ] Add `popoverEnabled?: boolean` to `PluginOptions`
-- [ ] Implement: conditional popover generation
-- [ ] Lint & type check
+- [x] Write test: `popoverEnabled: false` → rendered HTML does not contain popover elements (`pandoc-citation-popover`)
+- [x] Write test: `popoverEnabled: false` → citation text still renders correctly
+- [x] Write test: `popoverEnabled: true` (default) → popovers are included
+- [x] Add `popoverEnabled?: boolean` to `PluginOptions`
+- [x] Implement: conditional popover generation
+- [x] Lint & type check
 
 ### Step 3: Wire up in extension.ts
 
