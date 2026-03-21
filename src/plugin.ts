@@ -440,25 +440,44 @@ function loadCslStyle(
   cslPath: string | null,
   opts: PluginOptions,
 ): string | null {
-  if (!cslPath || !opts.readFileSync || !opts.existsSync) return null;
-
   const context = {
     mdFileDir: opts.mdFilePath
       ? dirName(opts.mdFilePath)
       : opts.workspaceRoot || "",
     searchDirectories: opts.cslSearchDirectories || [],
     workspaceRoot: opts.workspaceRoot || "",
-    exists: opts.existsSync,
+    exists: opts.existsSync || (() => false),
   };
 
-  const resolved = resolvePath(cslPath, context);
-  if (!resolved) return null;
-
-  try {
-    return opts.readFileSync(resolved);
-  } catch {
-    return null;
+  // YAML csl field takes precedence
+  if (cslPath && opts.readFileSync && opts.existsSync) {
+    const resolved = resolvePath(cslPath, context);
+    if (resolved) {
+      try {
+        return opts.readFileSync(resolved);
+      } catch {
+        // fall through to defaultCsl
+      }
+    }
   }
+
+  // Fall back to defaultCsl setting
+  if (!opts.defaultCsl) return null;
+
+  // Try to resolve as a file path first
+  if (opts.readFileSync && opts.existsSync) {
+    const resolved = resolvePath(opts.defaultCsl, context);
+    if (resolved) {
+      try {
+        return opts.readFileSync(resolved);
+      } catch {
+        // fall through to built-in name
+      }
+    }
+  }
+
+  // Treat as a built-in style name (e.g. "ieee", "vancouver")
+  return opts.defaultCsl;
 }
 
 // --- Utility ---

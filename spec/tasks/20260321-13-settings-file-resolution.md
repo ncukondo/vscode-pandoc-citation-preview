@@ -41,11 +41,11 @@ Each step follows Red-Green-Refactor.
 
 ### Step 3: defaultCsl behavior
 
-- [ ] Write test: `defaultCsl` set to built-in style name (e.g. `"ieee"`) → renderers use that style
-- [ ] Write test: `defaultCsl` set to file path → CSL file loaded and applied
-- [ ] Write test: YAML metadata `csl` field takes precedence over `defaultCsl`
-- [ ] Implement
-- [ ] Lint & type check
+- [x] Write test: `defaultCsl` set to built-in style name (e.g. `"ieee"`) → renderers use that style
+- [x] Write test: `defaultCsl` set to file path → CSL file loaded and applied
+- [x] Write test: YAML metadata `csl` field takes precedence over `defaultCsl`
+- [x] Implement
+- [x] Lint & type check
 
 ### Step 4: defaultBibliography behavior
 

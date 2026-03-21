@@ -76,13 +76,13 @@ export function createCitationHoverProvider(
 
       if (!bibData.ids.includes(citationKey)) return null;
 
-      // Load CSL style
+      // Load CSL style (YAML csl field takes precedence over defaultCsl)
       let cslStyle: string | null = null;
+      const cslCtx = {
+        ...resolveCtx,
+        searchDirectories: options.cslSearchDirectories || [],
+      };
       if (metadata.csl) {
-        const cslCtx = {
-          ...resolveCtx,
-          searchDirectories: options.cslSearchDirectories || [],
-        };
         const resolved = resolvePath(metadata.csl, cslCtx);
         if (resolved) {
           try {
@@ -90,6 +90,21 @@ export function createCitationHoverProvider(
           } catch {
             // skip unreadable CSL files
           }
+        }
+      }
+      if (!cslStyle && options.defaultCsl) {
+        // Try to resolve as a file path first
+        const resolved = resolvePath(options.defaultCsl, cslCtx);
+        if (resolved) {
+          try {
+            cslStyle = fs.readFileSync(resolved, "utf-8");
+          } catch {
+            // fall through to built-in name
+          }
+        }
+        // If not a file, treat as built-in style name
+        if (!cslStyle) {
+          cslStyle = options.defaultCsl;
         }
       }
 
