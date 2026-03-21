@@ -17,8 +17,8 @@ Each step follows Red-Green-Refactor.
 
 ### Step 1: Add popoverEnabled setting to package.json
 
-- [ ] Define `pandocCitationPreview.popoverEnabled`: `boolean` (default: `true`)
-- [ ] Add description
+- [x] Define `pandocCitationPreview.popoverEnabled`: `boolean` (default: `true`)
+- [x] Add description
 
 ### Step 2: Handle popoverEnabled in plugin.ts
 
